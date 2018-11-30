@@ -7,7 +7,7 @@
   }
 
   var container, stats, clock, gui, mixer, actions, activeAction, previousAction;
-  var camera, scene, renderer, model, face;
+  var camera, scene, renderer;// model, face;
 
   var api = { state: 'Walking' };
 
@@ -52,19 +52,41 @@
 
     // model
 
-    var loader = new THREE.GLTFLoader();
+    var loader = new THREE.OBJLoader();
+    loader.load(
+      'models/tinyhouse.obj', // Replace this with your filename/location
+      function (mesh) {
+        scene.add(mesh);
+        mesh.rotation.y = 90;
+      }
+    )
+
+    var materialLoader = new THREE.MTLLoader()
+    materialLoader.load('models/tinyhouse.mtl', function (material) {
+      var objLoader = new THREE.OBJLoader()
+      objLoader.setMaterials(material)
+      objLoader.load(
+        'models/tinyhouse.obj',
+        function (object) {
+          scene.add(object);
+          object.rotation.y = 90;
+        }
+      )
+    })
+
+
+    /* var loader = new THREE.GLTFLoader();
     loader.load( 'models-RobotExpressive/RobotExpressive.glb', function( gltf ) {
 
       model = gltf.scene;
       scene.add( model );
-
       createGUI( model, gltf.animations );
 
     }, undefined, function( e ) {
 
       console.error( e );
 
-    } );
+    } ); */
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -81,7 +103,7 @@
 
   }
 
-  function createGUI( model, animations ) {
+  /* function createGUI( model, animations ) {
 
     var states = [ 'Idle', 'Walking', 'Running', 'Dance', 'Death', 'Sitting', 'Standing' ];
     var emotes = [ 'Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp' ];
@@ -173,7 +195,7 @@
 
     expressionFolder.open();
 
-  }
+  //}
 
   function fadeToAction( name, duration ) {
 
@@ -193,7 +215,7 @@
       .fadeIn( duration )
       .play();
 
-  }
+  }*/
 
   function onWindowResize() {
 
