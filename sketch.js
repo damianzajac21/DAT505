@@ -9,7 +9,7 @@
   var container, stats, clock, gui, mixer, actions, activeAction, previousAction;
   var camera, scene, renderer;// model, face;
 
-  var api = { state: 'Walking' };
+  //var api = { state: 'Walking' };
 
   init();
   animate();
@@ -24,8 +24,8 @@
     camera.lookAt( new THREE.Vector3( 0, 2, 0 ) );
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xe0e0e0 );
-    scene.fog = new THREE.Fog( 0xe0e0e0, 20, 100 );
+    scene.background = new THREE.Color( 0x99efff );
+    scene.fog = new THREE.Fog( 0x99efff, 20, 100 );
 
     clock = new THREE.Clock();
 
@@ -41,14 +41,14 @@
 
     // ground
 
-    var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+    var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x114411, depthWrite: false } ) );
     mesh.rotation.x = - Math.PI / 2;
     scene.add( mesh );
 
-    var grid = new THREE.GridHelper( 200, 40, 0x000000, 0x000000 );
+    /*var grid = new THREE.GridHelper( 200, 40, 0x000000, 0x000000 );
     grid.material.opacity = 0.2;
     grid.material.transparent = true;
-    scene.add( grid );
+    scene.add( grid ); */
 
     // model
 
