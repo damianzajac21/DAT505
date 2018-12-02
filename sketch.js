@@ -7,12 +7,10 @@
   }
 
   var container, stats, clock, gui, mixer, actions, activeAction, previousAction;
-  var camera, scene, renderer;// model, face;
-
-  //var api = { state: 'Walking' };
+  var camera, scene, renderer, controls;// model, face;
+  var count = 0;
 
   init();
-  animate();
 
   function init() {
 
@@ -20,8 +18,7 @@
     document.body.appendChild( container );
 
     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 100 );
-    camera.position.set( - 5, 3, 10 );
-    camera.lookAt( new THREE.Vector3( 0, 2, 0 ) );
+    camera.position.set( -5, 2, 20 );
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0x99efff );
@@ -29,6 +26,31 @@
 
     clock = new THREE.Clock();
 
+    /*controls = new THREE.PointerLockControls( camera );
+    var blocker = document.getElementById( 'blocker' );
+    var instructions = document.getElementById( 'instructions' );
+
+    instructions.addEventListener( 'click', function () {
+
+      controls.lock();
+
+    }, false );
+
+    controls.addEventListener( 'lock', function () {
+
+      instructions.style.display = 'none';
+      blocker.style.display = 'none';
+
+    } );
+
+    controls.addEventListener( 'unlock', function () {
+
+      blocker.style.display = 'block';
+      instructions.style.display = '';
+
+    } );
+
+    scene.add( controls.getObject() );*/
     // lights
 
     var light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
@@ -45,10 +67,10 @@
     mesh.rotation.x = - Math.PI / 2;
     scene.add( mesh );
 
-    /*var grid = new THREE.GridHelper( 200, 40, 0x000000, 0x000000 );
+    var grid = new THREE.GridHelper( 200, 40, 0x000000, 0x000000 );
     grid.material.opacity = 0.2;
     grid.material.transparent = true;
-    scene.add( grid ); */
+    scene.add( grid );
 
     // model
 
@@ -74,19 +96,73 @@
       )
     })
 
+    //set up state so we know if we are moving forward
+    var moveForward = false;
+    var moveBackwards = false;
+    var moveLeft = false;
+    var moveRight = false;
 
-    /* var loader = new THREE.GLTFLoader();
-    loader.load( 'models-RobotExpressive/RobotExpressive.glb', function( gltf ) {
+  //define velocity as a vector3
+  	var velocity = new THREE.Vector3();
+    var prevTime = performance.now();
 
-      model = gltf.scene;
-      scene.add( model );
-      createGUI( model, gltf.animations );
+  //moveforward is true when 'up' or 'w' is pressed
+  var onKeyDown = function ( event ) {
+					switch ( event.keyCode ) {
+						case 38: // up
+						case 87: // w
+							moveForward = true;
+              console.log("onKeyDown! moveForward is now: " + moveForward)
+							break;
+            case 40: // down
+            case 83: // s
+              moveBackwards = true;
+              console.log("onKeyDown! moveBackwards is now: " + moveBackwards)
+              break;
+            case 37: // left
+            case 65: // a
+              moveLeft = true;
+              console.log("onKeyDown! moveLeft is now: " + moveLeft)
+              break;
+            case 39: // right
+            case 68: // d
+              moveRight = true;
+              console.log("onKeyDown! moveRight is now: " + moveRight)
+              break;
+         }
+     }
 
-    }, undefined, function( e ) {
 
-      console.error( e );
+  //moveforward is false when 'up' or 'w' is not pressed
+    var onKeyUp = function ( event ) {
+      switch( event.keyCode ) {
+        case 38: // up
+        case 87: // w
+          moveForward = false;
+          console.log("onKeyUp! moveForward is now: " + moveForward)
+          break;
+        case 40: // down
+        case 83: // s
+          moveBackwards = false;
+          console.log("onKeyDown! moveBackwards is now: " + moveBackwards)
+          break;
+        case 37: // left
+        case 65: // a
+          moveLeft = false;
+          console.log("onKeyDown! moveLeft is now: " + moveLeft)
+          break;
+        case 39: // right
+        case 68: // d
+          moveRight = false;
+          console.log("onKeyDown! moveRight is now: " + moveRight)
+          break;
+        }
+    }
 
-    } ); */
+		//make sure our document knows what functions to call when a key is pressed.
+    document.addEventListener( 'keydown', onKeyDown, false );
+    document.addEventListener( 'keyup', onKeyUp, false );
+
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -101,143 +177,60 @@
     stats = new Stats();
     container.appendChild( stats.dom );
 
-  }
+    //time to render the movement every frame.
+    function render() {
+      renderer.render(scene, camera)
+      //moving the camera
 
-  /* function createGUI( model, animations ) {
+      //lets make sure we can move camera smoothly based on user's performance.
+      var time = performance.now();
+      var delta = ( time - prevTime ) / 1000;
 
-    var states = [ 'Idle', 'Walking', 'Running', 'Dance', 'Death', 'Sitting', 'Standing' ];
-    var emotes = [ 'Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp' ];
+      //reset z velocity to be 0 always. But override it if user presses up or w. See next line...
+          velocity.z -= velocity.z * 10.0 * delta;
+          velocity.x -= velocity.x * 10.0 * delta;
+      //if the user pressed 'up' or 'w', set velocity.z to a value > 0.
+      if ( moveForward ) velocity.z -= 40.0 * delta;
+      if ( moveBackwards ) velocity.z -= -40.0 * delta;
+      if ( moveLeft ) velocity.x -= 40.0 * delta;
+      if ( moveRight ) velocity.x -= -40.0 * delta;
+      //pass velocity as an argument to translateZ and call it on camera.
+      camera.translateZ( velocity.z * delta );
+      camera.translateX( velocity.x * delta );
 
-    gui = new dat.GUI();
-
-    mixer = new THREE.AnimationMixer( model );
-
-    actions = {};
-
-    for ( var i = 0; i < animations.length; i++ ) {
-
-      var clip = animations[ i ];
-      var action = mixer.clipAction( clip );
-      actions[ clip.name ] = action;
-
-      if ( emotes.indexOf( clip.name ) >= 0 || states.indexOf( clip.name ) >= 4 ) {
-
-          action.clampWhenFinished = true;
-          action.loop = THREE.LoopOnce;
-
-      }
+        prevTime = time;
 
     }
 
-    // states
+    function onWindowResize() {
 
-    var statesFolder = gui.addFolder( 'States' );
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
 
-    var clipCtrl = statesFolder.add( api, 'state' ).options( states );
-
-    clipCtrl.onChange( function() {
-
-      fadeToAction( api.state, 0.5 );
-
-    } );
-
-    statesFolder.open();
-
-    // emotes
-
-    var emoteFolder = gui.addFolder( 'Emotes' );
-
-    function createEmoteCallback( name ) {
-
-      api[ name ] = function() {
-
-        fadeToAction( name, 0.2 );
-
-        mixer.addEventListener( 'finished', restoreState );
-
-      };
-
-      emoteFolder.add( api, name );
+      renderer.setSize( window.innerWidth, window.innerHeight );
 
     }
 
-    function restoreState() {
-
-      mixer.removeEventListener( 'finished', restoreState );
-
-      fadeToAction( api.state, 0.2 );
-
+    function draw() {
+      count += 0.1;
+      requestAnimationFrame( draw );
+      render();
     }
 
-    for ( var i = 0; i < emotes.length; i++ ) {
+    draw();
 
-      createEmoteCallback( emotes[ i ] );
+    function animate() {
 
-    }
+      var dt = clock.getDelta();
 
-    emoteFolder.open();
+      if ( mixer ) mixer.update( dt );
 
-    // expressions
+      requestAnimationFrame( animate );
 
-    face = model.getObjectByName( 'Head_2' );
+      renderer.render( scene, camera );
 
-    var expressions = Object.keys( face.morphTargetDictionary );
-    var expressionFolder = gui.addFolder('Expressions');
-
-    for ( var i = 0; i < expressions.length; i++ ) {
-
-      expressionFolder.add( face.morphTargetInfluences, i, 0, 1 ).name( expressions[ i ] );
+      stats.update();
 
     }
-
-    activeAction = actions['Walking'];
-    activeAction.play();
-
-    expressionFolder.open();
-
-  //}
-
-  function fadeToAction( name, duration ) {
-
-    previousAction = activeAction;
-    activeAction = actions[ name ];
-
-    if ( previousAction !== activeAction ) {
-
-      previousAction.fadeOut( duration );
-
-    }
-
-    activeAction
-      .reset()
-      .setEffectiveTimeScale( 1 )
-      .setEffectiveWeight( 1 )
-      .fadeIn( duration )
-      .play();
-
-  }*/
-
-  function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-  }
-
-  //
-
-  function animate() {
-
-    var dt = clock.getDelta();
-
-    if ( mixer ) mixer.update( dt );
-
-    requestAnimationFrame( animate );
-
-    renderer.render( scene, camera );
-
-    stats.update();
-
+      animate();
   }
