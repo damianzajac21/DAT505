@@ -7,8 +7,10 @@
   }
 
   var container, stats, clock, gui, mixer, actions, activeAction, previousAction;
-  var camera, scene, renderer, controls;// model, face;
+  var camera, scene, raycaster, renderer, controls, object;// model, face;
   var count = 0;
+  var mouse = new THREE.Vector2(), INTERSECTED;
+  var objects = [];
 
   init();
 
@@ -25,6 +27,8 @@
     scene.fog = new THREE.Fog( 0x99efff, 20, 100 );
 
     clock = new THREE.Clock();
+
+		raycaster = new THREE.Raycaster();
 
     /*controls = new THREE.PointerLockControls( camera );
     var blocker = document.getElementById( 'blocker' );
@@ -77,9 +81,9 @@
     var loader = new THREE.OBJLoader();
     loader.load(
       'models/tinyhouse.obj', // Replace this with your filename/location
-      function (mesh) {
-        scene.add(mesh);
-        mesh.rotation.y = 90;
+      function (object) {
+        scene.add(object);
+        object.rotation.y = 90;
       }
     )
 
@@ -91,6 +95,7 @@
         'models/tinyhouse.obj',
         function (object) {
           scene.add(object);
+          objects.push(object);
           object.rotation.y = 90;
         }
       )
@@ -198,8 +203,27 @@
       camera.translateZ( velocity.z * delta );
       camera.translateX( velocity.x * delta );
 
-        prevTime = time;
+      prevTime = time;
 
+      var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject( camera );
+
+      //raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+      raycaster.setFromCamera( mouse, camera );
+      //var intersects = raycaster.intersectObjects( scene.children );
+      var intersects = raycaster.intersectObjects( objects, true );
+
+      if ( intersects.length > 0 ) {
+        if ( INTERSECTED != intersects[ 0 ].object ) {
+          if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+          INTERSECTED = intersects[ 0 ].object;
+          INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+          INTERSECTED.material.emissive.setHex( 0xff0000 );
+        }
+      } else {
+        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+        INTERSECTED = null;
+      }
+        renderer.render( scene, camera );
     }
 
     function onWindowResize() {
@@ -227,7 +251,6 @@
 
       requestAnimationFrame( animate );
 
-      renderer.render( scene, camera );
 
       stats.update();
 
