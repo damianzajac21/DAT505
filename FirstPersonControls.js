@@ -41,6 +41,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 	this.moveForward = false;
 	this.moveBackward = false;
+	this.moveCamera = false;
 	this.moveLeft = false;
 	this.moveRight = false;
 	this.freeze = false;
@@ -90,6 +91,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 			switch ( event.button ) {
 
 				case 0: this.moveForward = true; break;
+				case 1: this.moveCamera = true; break;
 				case 2: this.moveBackward = true; break;
 
 			}
@@ -110,6 +112,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 			switch ( event.button ) {
 
 				case 0: this.moveForward = false; break;
+				case 1: this.moveCamera = false; break;
 				case 2: this.moveBackward = false; break;
 
 			}
@@ -157,7 +160,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 			case 82: /*R*/ this.moveUp = true; break;
 			case 70: /*F*/ this.moveDown = true; break;
 
-			case 81: /*Q*/ this.freeze = !this.freeze; break;
+			//case 81: /*Q*/ this.freeze = !this.freeze; break;
 
 		}
 
@@ -193,6 +196,8 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 			return;
 
 		}
+
+		if ( this.moveCamera) {
 
 		if ( this.heightSpeed ) {
 
@@ -256,6 +261,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 		targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
 
 		this.object.lookAt( targetPosition );
+	}
 
 	};
 
