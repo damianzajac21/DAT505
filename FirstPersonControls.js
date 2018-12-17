@@ -90,8 +90,8 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 			switch ( event.button ) {
 
-				case 0: this.moveForward = true; break;
-				case 1: this.moveCamera = true; break;
+				case 1: this.moveForward = true; break;
+				case 0: this.moveCamera = true; break;
 				case 2: this.moveBackward = true; break;
 
 			}
@@ -111,8 +111,8 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 			switch ( event.button ) {
 
-				case 0: this.moveForward = false; break;
-				case 1: this.moveCamera = false; break;
+				case 1: this.moveForward = false; break;
+				case 0: this.moveCamera = false; break;
 				case 2: this.moveBackward = false; break;
 
 			}

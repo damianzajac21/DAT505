@@ -3,7 +3,10 @@
 
 var camera, scene, renderer, controls, clock;
 var INV_MAX_FPS = 1 / 100, frameDelta = 0;
-
+/*var cloudCount = 10;
+var clouds = [];
+var range = 10;*/
+//https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamAudioSourceNode
 // SETUP ========================================================
 models();
 function setup() {
@@ -13,6 +16,13 @@ function setup() {
 
    requestAnimationFrame(function animate() {
      draw();
+
+     /*var t = clock.elapsedTime * 1;
+
+     for(var i = 0, n = clouds.length; i < n; i++) {
+       var cloud = clouds[i];
+       cloud.update(t);
+     }*/
 
      frameDelta += clock.getDelta();
      while (frameDelta >= INV_MAX_FPS) {
@@ -60,8 +70,7 @@ function checkKeyPressed(e) {
    controls.verticalMax = 1.8;
    controls.lon = -150;
    controls.lat = 120;
-   console.log(scene);
- }
+  }
 
  function setupWorld() {
    //Create the geometry for the floor
@@ -96,6 +105,33 @@ function checkKeyPressed(e) {
    light.shadow.camera.bottom = - d;
    light.shadow.camera.far = 1000;
    scene.add( light );
+
+  /*var rand = function() {
+       return Math.random() - 0.5;
+   };
+
+   for(var i = 0; i < cloudCount; i++) {
+
+    var cloud = new THREE.Cloud();
+
+    cloud.position.set(rand() * range, rand() * range, rand() * range);
+    cloud.rotation.set(rand() * Math.PI, rand() * Math.PI, rand() * Math.PI);
+
+    var scale = 2.0 + Math.random() * 6;
+    cloud.scale.set(scale, scale, scale);
+
+    scene.add(cloud);
+
+    clouds.push(cloud);
+}
+
+   var cloud = new THREE.Cloud( 0xeeeeee );
+
+   cloud.scale.set( 3, 3, 3 );
+   cloud.position.set( 0, 1, 0 );
+   cloud.rotation.set( Math.PI * 0.25, Math.PI * 0.5, 0 );
+
+   scene.add( cloud ); */
 
    //Create the lighting system and add to the scene
 /*   var light = new THREE.DirectionalLight(0xf9f1c2, 1);
