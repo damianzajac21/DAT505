@@ -8,7 +8,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
   microphone = audioContext.createMediaStreamSource(stream);
   javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
-  analyser.smoothingTimeConstant = 0.5;
+  analyser.smoothingTimeConstant = 0.2;
   analyser.fftSize = 1024;
 
   microphone.connect(analyser);
