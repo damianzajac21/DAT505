@@ -16,7 +16,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 	this.lookVertical = true;
 	this.autoForward = false;
-	// this.invertVertical = false;
+ 	this.invertVertical = false;
 
 	this.activeLook = true;
 
@@ -90,9 +90,9 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 			switch ( event.button ) {
 
-				case 1: this.moveForward = true; break;
-				case 0: this.moveCamera = true; break;
-				case 2: this.moveBackward = true; break;
+			//	case 1: this.moveForward = true; break;
+				case 2: this.moveCamera = true; break;
+			//	case 0: this.moveBackward = true; break;
 
 			}
 
@@ -111,9 +111,9 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 			switch ( event.button ) {
 
-				case 1: this.moveForward = false; break;
-				case 0: this.moveCamera = false; break;
-				case 2: this.moveBackward = false; break;
+			//	case 1: this.moveForward = false; break;
+				case 2: this.moveCamera = false; break;
+			//	case 0: this.moveBackward = false; break;
 
 			}
 

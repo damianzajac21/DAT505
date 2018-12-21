@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+@font-face {
+  font-family: 'Chalkduster';
+  src: url('Chalkduster.ttf');
+}
+
+h1, h2 {
+  font-family: 'Chalkduster';
+  font-weight: lighter;
+	position: absolute;
+  left: 10px;
+	width: 100%;
+	z-index: 100;
+	display:block;
+  font-size: 20px;
+  color: rgb(0,200,100);
+}
+
+h2 {
+	top: 20px;
+  color: rgb(200,100,0)
+}

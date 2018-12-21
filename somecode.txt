@@ -28,3 +28,22 @@ var city = new THREE.Mesh(cityGeometry, material);
 city.castShadow = true;
 city.receiveShadow = true;
 scene.add(city);
+
+
+/*window.addEventListener("keydown", checkKeyPressed, false);
+
+function checkKeyPressed(e) {
+   if (e.keyCode == "72") {
+       console.log(camera.position.y);
+       console.log(camera.position.z);
+       console.log(camera.rotation.x);
+   }
+} */
+
+
+/*   var geo = new THREE.PlaneGeometry(2000, 2000, 40, 40);
+   var mat = new THREE.MeshPhongMaterial({color: 0x9db3b5, overdraw: true});
+   var floor = new THREE.Mesh(geo, mat);
+   floor.rotation.x = -0.5 * Math.PI;
+   floor.receiveShadow = true;
+   scene.add(floor); */
