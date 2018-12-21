@@ -1,14 +1,14 @@
 var ecoPoints = 1;
 var civPoints = 1;
 
-navigator.mediaDevices.getUserMedia({ audio: true, /*video: true*/ })
+navigator.mediaDevices.getUserMedia({ audio: true })
 .then(function(stream) {
   audioContext = new AudioContext();
   analyser = audioContext.createAnalyser();
   microphone = audioContext.createMediaStreamSource(stream);
   javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
-  analyser.smoothingTimeConstant = 0.9;
+  analyser.smoothingTimeConstant = 0.5;
   analyser.fftSize = 1024;
 
   microphone.connect(analyser);
