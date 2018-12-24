@@ -1,4 +1,8 @@
+if ( WEBGL.isWebGLAvailable() === false ) {
 
+  document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+
+}
 // GLOBALS ======================================================
 var camera, scene, renderer, controls, clock;
 var INV_MAX_FPS = 1 / 100, frameDelta = 0;
@@ -15,7 +19,7 @@ function setup() {
 
   requestAnimationFrame(function animate() {
     draw();
-
+    update();
     /*var t = clock.elapsedTime * 1;
 
     for(var i = 0, n = clouds.length; i < n; i++) {
@@ -23,11 +27,11 @@ function setup() {
     cloud.update(t);
   }*/
 
-  frameDelta += clock.getDelta();
+  /*frameDelta += clock.getDelta();
   while (frameDelta >= INV_MAX_FPS) {
     update(INV_MAX_FPS);
     frameDelta -= INV_MAX_FPS;
-  }
+  }*/
 
   requestAnimationFrame( animate );
 });
@@ -38,18 +42,23 @@ function setupThreeJS() {
   scene.background = new THREE.Color( 0x99efff );
   scene.fog = new THREE.Fog( 0x99efff, 20, 100 );
 
-  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+  //camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+
+  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+  /*camera.position.set( 10, 2, 0 );
+  camera.rotation.y = 180;*/
   camera.position.y = 3;
   camera.position.z = -10;
   camera.rotation.x = -45 * Math.PI / 180;
 
   renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setPixelRatio( window.devicePixelRatio );
   //renderer.shadowMapEnabled = true;
   document.body.appendChild( renderer.domElement );
 
   clock = new THREE.Clock();
-  controls = new THREE.FirstPersonControls(camera);
+/*  controls = new THREE.FirstPersonControls(camera);
   controls.lookSpeed = 0.35;
   controls.movementSpeed = 7;
   controls.noFly = true;
@@ -58,16 +67,33 @@ function setupThreeJS() {
   controls.verticalMin = 1.5;
   controls.verticalMax = 1.8;
   controls.lon = -150;
-  controls.lat = 120;
+  controls.lat = 120;*/
+  controls = new THREE.OrbitControls( camera, renderer.domElement );
+//controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.25;
+  controls.screenSpacePanning = false;
+  controls.minDistance = 15;
+  controls.maxDistance = 30;
+  controls.maxPolarAngle = (Math.PI / 2) - 0.2;
+
+  window.addEventListener( 'resize', onWindowResize, false );
 }
+
+
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
 
 function setupWorld() {
   //Create the geometry for the floor
   var texture = new THREE.TextureLoader().load( 'models/grass.jpg' );
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(500, 500);
-  var plane = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ),
+  texture.repeat.set(50, 50);
+  var plane = new THREE.Mesh( new THREE.PlaneBufferGeometry( 200, 200 ),
   new THREE.MeshPhongMaterial( { color: 0xaaaaaa,
     map: texture, depthWrite: true, shininess: 0 } ) );
     plane.rotation.x = - Math.PI / 2;
@@ -182,8 +208,8 @@ function draw() {
 }
 
 // UPDATE =======================================================
-function update(delta) {
-  controls.update(delta);
+function update(/*delta*/) {
+  controls.update(/*delta*/);
 }
 
 // RUN ==========================================================
