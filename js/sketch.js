@@ -179,7 +179,7 @@ function models() {
   // model
   var loader = new THREE.OBJLoader();
   loader.load(
-    'models/tinyhouse.obj', // Replace this with your filename/location
+    'models/skyscraper2.obj', // Replace this with your filename/location
     function (mesh) {
       mesh.scale.set(1.2,1.2,1.2);
       mesh.position.y = 0.62;
@@ -188,11 +188,11 @@ function models() {
   )
 
   var materialLoader = new THREE.MTLLoader()
-  materialLoader.load('models/tinyhouse.mtl', function (material) {
+  materialLoader.load('models/skyscraper2.mtl', function (material) {
     var objLoader = new THREE.OBJLoader()
     objLoader.setMaterials(material)
     objLoader.load(
-      'models/tinyhouse.obj',
+      'models/skyscraper2.obj',
       function (object) {
         object.scale.set(1.2,1.2,1.2);
         object.position.y = 0.62;
