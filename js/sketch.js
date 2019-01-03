@@ -182,7 +182,7 @@ function models() {
     'models/skyscraper2.obj', // Replace this with your filename/location
     function (mesh) {
       mesh.scale.set(1.2,1.2,1.2);
-      mesh.position.y = 0.62;
+      mesh.position.y = 0;
       scene.add(mesh);
     }
   )
@@ -195,7 +195,7 @@ function models() {
       'models/skyscraper2.obj',
       function (object) {
         object.scale.set(1.2,1.2,1.2);
-        object.position.y = 0.62;
+        object.position.y = 0;
         scene.add(object);
       }
     )
