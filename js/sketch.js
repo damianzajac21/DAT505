@@ -10,10 +10,16 @@ var INV_MAX_FPS = 1 / 100, frameDelta = 0;
 var clouds = [];
 var range = 10;*/
 
+/*var parameters = {
+  distance: 400,
+  inclination: 0,
+  azimuth: 0.3,
+};*/
+
 // SETUP ========================================================
 models();
 function setup() {
-  document.body.style.backgroundColor = '#d7f0f7';
+  //document.body.style.backgroundColor = '#d7f0f7';
   setupThreeJS();
   setupWorld();
 
@@ -22,25 +28,82 @@ function setup() {
     update();
     /*var t = clock.elapsedTime * 1;
 
-    for(var i = 0, n = clouds.length; i < n; i++) {
-    var cloud = clouds[i];
-    cloud.update(t);
+    for(var i = 0, n = 10000; i < n; i++) {
   }*/
+  param();
 
-  /*frameDelta += clock.getDelta();
+  frameDelta += clock.getDelta();
   while (frameDelta >= INV_MAX_FPS) {
     update(INV_MAX_FPS);
     frameDelta -= INV_MAX_FPS;
-  }*/
+  }
 
   requestAnimationFrame( animate );
 });
 }
 
+function param() {
+  parameters.azimuth -= 0.0001;
+  parameters.azimuth.onchange = function() {draw()};
+  //console.log(parameters.azimuth);
+}
+
 function setupThreeJS() {
   scene = new THREE.Scene();
-  scene.background = new THREE.Color( 0x99efff );
-  scene.fog = new THREE.Fog( 0x99efff, 20, 100 );
+  //scene.background = new THREE.Color( 0x99efff );
+  /*var sky = new THREE.Sky();
+  sky.scale.setScalar( 10000 );
+  scene.add( sky );
+
+  var uniforms = sky.material.uniforms;
+  uniforms.turbidity.value = 10;
+  uniforms.rayleigh.value = 2;
+  uniforms.luminance.value = 1;
+  uniforms.mieCoefficient.value = 0.002;
+  uniforms.mieDirectionalG.value = 0.7;
+
+
+  light = new THREE.DirectionalLight( 0xffffff, 0.7 );
+  scene.add( light );
+
+  var theta = Math.PI * ( parameters.inclination - 0.5 );
+  var phi = 2 * Math.PI * ( parameters.azimuth - 0.5 );
+  light.position.x = parameters.distance * Math.cos( phi );
+  light.position.y = parameters.distance * Math.sin( phi ) * Math.sin( theta );
+  light.position.z = parameters.distance * Math.sin( phi ) * Math.cos( theta );
+  sky.material.uniforms.sunPosition.value = light.position.copy( light.position );
+  //camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+  light.castShadow = true;
+  light.shadow.camera.near = 1;
+  light.shadow.camera.far = 10;
+  light.shadow.camera.right = 15;
+  light.shadow.camera.left = - 15;
+  light.shadow.camera.top	= 15;
+  light.shadow.camera.bottom = - 15;
+  light.shadow.mapSize.width = 1024;
+  light.shadow.mapSize.height = 1024;
+
+  //scene.fog = new THREE.FogExp2( 0x98bbbc, 0.01325 );
+
+  lightR = new THREE.DirectionalLight ( 0xffffff, 0.7 );
+  scene.add( lightR );
+
+  lightR.position.x = -1;
+
+  lightL = new THREE.DirectionalLight ( 0xffffff, 0.7 );
+  scene.add( lightL );
+
+  lightL.position.x = 1;
+
+  lightB = new THREE.DirectionalLight ( 0xffffff, 0.7 );
+  scene.add( lightB );
+
+  lightB.position.z = 1;
+
+  lightF = new THREE.DirectionalLight ( 0xffffff, 0.7 );
+  scene.add( lightF );
+
+  lightF.position.z = -1;*/
 
   //camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
 
@@ -81,11 +144,11 @@ function setupThreeJS() {
 }
 
 
-			function onWindowResize() {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				renderer.setSize( window.innerWidth, window.innerHeight );
-			}
+function onWindowResize() {
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+}
 
 function setupWorld() {
   //Create the geometry for the floor
@@ -94,13 +157,16 @@ function setupWorld() {
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(50, 50);
   var plane = new THREE.Mesh( new THREE.PlaneBufferGeometry( 200, 200 ),
-  new THREE.MeshPhongMaterial( { color: 0xaaaaaa,
-    map: texture, depthWrite: true, shininess: 0 } ) );
+  new THREE.MeshPhongMaterial( { color: 0x555555,
+    map: texture, depthWrite: true, shininess: 2 } ) );
     plane.rotation.x = - Math.PI / 2;
     plane.receiveShadow = true;
+    plane.traverse( function ( child ) {
+      child.receiveShadow = true;
+    });
     scene.add( plane );
 
-    scene.add( new THREE.AmbientLight( 0xdddddd ) );
+    /*scene.add( new THREE.AmbientLight( 0xdddddd ) );
     var light = new THREE.DirectionalLight( 0xdfebff, 1 );
     light.position.set( 50, 200, 100 );
     light.position.multiplyScalar( 1.3 );
@@ -113,7 +179,7 @@ function setupWorld() {
     light.shadow.camera.top = d;
     light.shadow.camera.bottom = - d;
     light.shadow.camera.far = 1000;
-    scene.add( light );
+    scene.add( light );*/
 
     /*var rand = function() {
     return Math.random() - 0.5;
@@ -179,23 +245,29 @@ function models() {
   // model
   var loader = new THREE.OBJLoader();
   loader.load(
-    'models/skyscraper2.obj', // Replace this with your filename/location
+    'models/tinyhouse.obj', // Replace this with your filename/location
     function (mesh) {
       mesh.scale.set(1.2,1.2,1.2);
       mesh.position.y = 0;
+      mesh.traverse( function ( child ) {
+        child.castShadow = true;
+      });
       scene.add(mesh);
     }
   )
 
   var materialLoader = new THREE.MTLLoader()
-  materialLoader.load('models/skyscraper2.mtl', function (material) {
+  materialLoader.load('models/tinyhouse.mtl', function (material) {
     var objLoader = new THREE.OBJLoader()
     objLoader.setMaterials(material)
     objLoader.load(
-      'models/skyscraper2.obj',
+      'models/tinyhouse.obj',
       function (object) {
         object.scale.set(1.2,1.2,1.2);
         object.position.y = 0;
+        object.traverse( function ( child ) {
+          child.castShadow = true;
+        });
         scene.add(object);
       }
     )
@@ -208,8 +280,8 @@ function draw() {
 }
 
 // UPDATE =======================================================
-function update(/*delta*/) {
-  controls.update(/*delta*/);
+function update(delta) {
+  controls.update(delta);
 }
 
 // RUN ==========================================================

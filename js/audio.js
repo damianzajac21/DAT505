@@ -32,10 +32,10 @@ navigator.mediaDevices.getUserMedia({ audio: true })
       document.getElementById("civPoints").innerHTML = "CivPoints: " + civPoints;
     //console.log(Math.round(average));
     // colorPids(average);
-    if (Math.round(average) < 2) {
+    if (Math.round(average) < 5) {
       ecoPoints = ecoPoints + 1;
-    } else if (Math.round(average) > 3) {
-      civPoints = civPoints + Math.round(average);
+    } else if (Math.round(average) > 5) {
+      civPoints = civPoints + 1;
     }
   }
   })
