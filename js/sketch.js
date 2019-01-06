@@ -22,14 +22,6 @@ function setup() {
     draw();
     update();
 
-  //var pozition = light.position.y;
-  //light.position.y = -500;
-  /*light.position.y -= 2;
-  if (pozition === 497.8837921882747) {
-    light.position.y -= 1;
-  }*/
-  //console.log(light.position.y);
-
   for (i = 0; i < 2; i++) {
     if (light.position.y === 499.8837921882747) { break; }
     light.position.y += i / 50;
@@ -137,7 +129,7 @@ function setupWorld() {
   texture.repeat.set(50, 50);
   var plane = new THREE.Mesh( new THREE.PlaneBufferGeometry( 1000, 1000 ),
   new THREE.MeshPhongMaterial( { color: 0x555555,
-    map: texture, depthWrite: true, shininess: 3 } ) );
+    map: texture, depthWrite: true, shininess: 8 } ) );
     plane.rotation.x = - Math.PI / 2;
     plane.receiveShadow = true;
     plane.traverse( function ( child ) {
@@ -145,46 +137,164 @@ function setupWorld() {
     });
     scene.add( plane );
 
-    var road = new THREE.Mesh( new THREE.PlaneBufferGeometry( 100, 5 ),
+    var roads = [];
+    for (var z = -150; z <= 170; z += 60) { // Start from -240 and sequentially add one every 30 pixels
+    var road = new THREE.Mesh( new THREE.PlaneBufferGeometry( 400, 5 ),
     new THREE.MeshPhongMaterial ( { color: 0x111111,
-    depthWrite: true, shininess: 6 } ) );
-    road.rotation.x = - Math.PI / 2;
-    road.position.z = -4.3;
+    depthWrite: true, shininess: 15 } ) );
+
+    road.position.z = z;
     road.position.y = 0.0009;
-    scene.add( road );
+    road.rotation.x = - Math.PI / 2;
+
+    scene.add(road);
+    roads.push(road);
+  }
+
+    var roades = [];
+    for (var x = -105; x <= 105; x += 50) {
+    var roada = new THREE.Mesh( new THREE.PlaneBufferGeometry( 400, 5 ),
+    new THREE.MeshPhongMaterial ( { color: 0x111111,
+    depthWrite: true, shininess: 15 } ) );
+
+    roada.rotation.z = - Math.PI / 2;
+    roada.position.y = 0.0009;
+    roada.rotation.x = - Math.PI / 2;
+    roada.position.x = x;
+    scene.add(roada);
+    roades.push(roada);
+  }
 }
 
 function models() {
   // model
-  var loader = new THREE.OBJLoader();
-  loader.load(
-    'models/tinyhouse.obj', // Replace this with your filename/location
-    function (mesh) {
-      mesh.scale.set(1.2,1.2,1.2);
-      mesh.position.y = 0;
-      mesh.traverse( function ( child ) {
-        child.castShadow = true;
-      });
-      scene.add(mesh);
-    }
-  )
-
   var materialLoader = new THREE.MTLLoader()
-  materialLoader.load('models/tinyhouse.mtl', function (material) {
-    var objLoader = new THREE.OBJLoader()
-    objLoader.setMaterials(material)
+
+  //tinyhouse
+  var objLoader = new THREE.OBJLoader()
+  materialLoader.load('models/tinyhouse.mtl', function (tinyhouseMAT) {
+    objLoader.setMaterials(tinyhouseMAT)
     objLoader.load(
       'models/tinyhouse.obj',
-      function (object) {
-        object.scale.set(1.2,1.2,1.2);
-        object.position.y = 0;
-        object.traverse( function ( child ) {
+      function (tinyhouseOBJ) {
+        tinyhouseOBJ.scale.set(1.2,1.2,1.2);
+        tinyhouseOBJ.position.y = 0;
+        tinyhouseOBJ.position.z = 25.7;
+        tinyhouseOBJ.rotation.y = - Math.PI;
+        //console.log(tinyhouseOBJ.rotation.y);
+        tinyhouseOBJ.traverse( function ( child ) {
           child.castShadow = true;
         });
-        scene.add(object);
+        scene.add(tinyhouseOBJ);
       }
     )
   })
+
+  //smallhouse
+  var objLoader0 = new THREE.OBJLoader()
+  materialLoader.load('models/smallhouse.mtl', function (smallhouseMAT) {
+    objLoader0.setMaterials(smallhouseMAT)
+    objLoader0.load(
+      'models/smallhouse.obj',
+      function (smallhouseOBJ) {
+        smallhouseOBJ.scale.set(1.2,1.2,1.2);
+        smallhouseOBJ.position.y = 0;
+        smallhouseOBJ.position.z = 25.7;
+        smallhouseOBJ.position.x = 5;
+        smallhouseOBJ.rotation.y = - Math.PI;
+        //console.log(smallhouseOBJ.rotation.y);
+        smallhouseOBJ.traverse( function ( child ) {
+          child.castShadow = true;
+        });
+        scene.add(smallhouseOBJ);
+      }
+    )
+  })
+
+  //mediumhouse
+  var objLoader1 = new THREE.OBJLoader()
+  materialLoader.load('models/mediumhouse.mtl', function (mediumhouseMAT) {
+    objLoader1.setMaterials(mediumhouseMAT)
+    objLoader1.load(
+      'models/mediumhouse.obj',
+      function (mediumhouseOBJ) {
+        mediumhouseOBJ.scale.set(1.2,1.2,1.2);
+        mediumhouseOBJ.position.y = 0;
+        mediumhouseOBJ.position.z = 34.3;
+        //mediumhouseOBJ.rotation.y = - Math.PI;
+        //console.log(mediumhouseOBJ.rotation.y);
+        mediumhouseOBJ.traverse( function ( child ) {
+          child.castShadow = true;
+        });
+        scene.add(mediumhouseOBJ);
+      }
+    )
+  })
+
+
+  //bighouse
+  var objLoader2 = new THREE.OBJLoader()
+  materialLoader.load('models/bighouse.mtl', function (bighouseMAT) {
+    objLoader2.setMaterials(bighouseMAT)
+    objLoader2.load(
+      'models/bighouse.obj',
+      function (bighouseOBJ) {
+        bighouseOBJ.scale.set(1.2,1.2,1.2);
+        bighouseOBJ.position.y = 0;
+        bighouseOBJ.position.z = 34.3;
+        bighouseOBJ.position.x = 10;
+        //bighouseOBJ.rotation.y = - Math.PI;
+        //console.log(bighouseOBJ.rotation.y);
+        bighouseOBJ.traverse( function ( child ) {
+          child.castShadow = true;
+        });
+        scene.add(bighouseOBJ);
+      }
+    )
+  })
+
+  //skyscraper1
+  var objLoader3 = new THREE.OBJLoader()
+  materialLoader.load('models/skyscraper1.mtl', function (skyscraper1MAT) {
+    objLoader3.setMaterials(skyscraper1MAT)
+    objLoader3.load(
+      'models/skyscraper1.obj',
+      function (skyscraper1OBJ) {
+        skyscraper1OBJ.scale.set(1.2,1.2,1.2);
+        skyscraper1OBJ.position.y = 0;
+        skyscraper1OBJ.position.z = 39.45;
+        skyscraper1OBJ.position.x = 30;
+        //skyscraper1OBJ.rotation.y = - Math.PI;
+        //console.log(skyscraper1OBJ.rotation.y);
+        skyscraper1OBJ.traverse( function ( child ) {
+          child.castShadow = true;
+        });
+        scene.add(skyscraper1OBJ);
+      }
+    )
+  })
+
+
+  //skyscraper2
+  var objLoader4 = new THREE.OBJLoader()
+  /*materialLoader.load('models/skyscraper2.mtl', function (skyscraper2MAT) {
+    objLoader4.setMaterials(skyscraper2MAT)
+    objLoader4.load(
+      'models/skyscraper2.obj',
+      function (skyscraper2OBJ) {
+        skyscraper2OBJ.scale.set(1.2,1.2,1.2);
+        skyscraper2OBJ.position.y = 0;
+        skyscraper2OBJ.position.z = 23.8;
+        skyscraper2OBJ.position.x = 20;
+        skyscraper2OBJ.rotation.y = - Math.PI;
+        //console.log(skyscraper2OBJ.rotation.y);
+        skyscraper2OBJ.traverse( function ( child ) {
+          child.castShadow = true;
+        });
+        scene.add(skyscraper2OBJ);
+      }
+    )
+  })*/
 }
 
 // DRAW =========================================================

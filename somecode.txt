@@ -184,3 +184,27 @@ function checkKeyPressed(e) {
    /*var cloudCount = 10;
    var clouds = [];
    var range = 10;*/
+
+
+   /*var loader = new THREE.OBJLoader();
+   loader.load(
+     'models/tinyhouse.obj', // Replace this with your filename/location
+     function (mesh) {
+       mesh.scale.set(1.2,1.2,1.2);
+       mesh.position.y = 0;
+       mesh.position.z = -4.3;
+       mesh.rotation.y = 3.15;
+       mesh.traverse( function ( child ) {
+         child.castShadow = true;
+       });
+       scene.add(mesh);
+     }
+   )*/
+
+   //var pozition = light.position.y;
+   //light.position.y = -500;
+   /*light.position.y -= 2;
+   if (pozition === 497.8837921882747) {
+     light.position.y -= 1;
+   }*/
+   //console.log(light.position.y);
