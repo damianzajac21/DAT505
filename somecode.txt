@@ -208,3 +208,23 @@ function checkKeyPressed(e) {
      light.position.y -= 1;
    }*/
    //console.log(light.position.y);
+
+   tinyhouseOBJ.position.y = 0;
+   tinyhouseOBJ.position.z = streetz - 4.3;
+   tinyhouseOBJ.position.x = streetx - Math.floor((Math.random() * 41) + 4.3);//4.3; //51; (41 + 4.3);//
+   tinyhouseOBJ.rotation.y = - Math.PI;
+
+   smallhouseOBJ.position.y = 0;
+   smallhouseOBJ.position.z = streetz - Math.floor((Math.random() * 51) + 4.3);
+   smallhouseOBJ.position.x = streetx - 4.3; //Math.floor((Math.random() * 41) - 4.3);
+   smallhouseOBJ.rotation.y = - Math.PI / 2;
+
+   mediumhouseOBJ.position.y = 0;
+   mediumhouseOBJ.position.z = streetz - Math.floor((Math.random() * 51) - 6.3);
+   mediumhouseOBJ.position.x = streetx + 4.3; //Math.floor((Math.random() * 41) + 4.3);
+   mediumhouseOBJ.rotation.y = Math.PI / 2;
+
+
+   bighouseOBJ.position.y = 0;
+   bighouseOBJ.position.z = streetz + 4.3;
+   bighouseOBJ.position.x = streetx - Math.floor((Math.random() * 40) + 5.3);

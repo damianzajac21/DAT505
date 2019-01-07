@@ -12,6 +12,13 @@ var parameters = {
   inclination: 0,
   azimuth: -0.01,
 };
+
+var road;
+var roada;
+var roadx = [ -105, -55, -5, 45, 95 ];
+//var streetx = roadx[Math.floor(Math.random()*roadx.length)];
+var roadz = [ -150, -90, -30, 30, 90, 150 ];
+//var streetz = roadz[Math.floor(Math.random()*roadz.length)];
 // SETUP ========================================================
 models();
 function setup() {
@@ -21,18 +28,6 @@ function setup() {
   requestAnimationFrame(function animate() {
     draw();
     update();
-
-  for (i = 0; i < 2; i++) {
-    if (light.position.y === 499.8837921882747) { break; }
-    light.position.y += i / 50;
-  }
-
-  //console.log('y:' + camera.position.y);
-  //console.log('z:' + camera.position.z);
-  //console.log('PosX:' + camera.position.x);
-  //console.log(camera.rotation.x);
-  //console.log('z:' + camera.rotation.z);
-  //console.log('y:' + camera.rotation.y)
 
   frameDelta += clock.getDelta();
   while (frameDelta >= INV_MAX_FPS) {
@@ -45,7 +40,7 @@ function setup() {
 
 function setupThreeJS() {
   scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2( 0x98bbbc, 0.00125 );
+  //scene.fog = new THREE.FogExp2( 0x98bbbc, 0.00055 );
   var sky = new THREE.Sky();
   sky.scale.setScalar( 10000 );
   scene.add( sky );
@@ -99,7 +94,7 @@ function setupThreeJS() {
   lightF.position.z = -1;
 
 
-  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 300 );
+  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 400 );
   camera.position.y = 13.797620797246811;
   camera.position.z = 28.60457175588346;
   camera.rotation.x = -45 * Math.PI / 180; //-1.80097995101144
@@ -152,13 +147,14 @@ function setupWorld() {
 
     var roads = [];
     for (var z = -150; z <= 170; z += 60) { // Start from -240 and sequentially add one every 30 pixels
-    var road = new THREE.Mesh( new THREE.PlaneBufferGeometry( 400, 5 ),
+    road = new THREE.Mesh( new THREE.PlaneBufferGeometry( 400, 5 ),
     new THREE.MeshPhongMaterial ( { color: 0x111111,
     depthWrite: true, shininess: 15, side: THREE.DoubleSide } ) );
 
     road.position.z = z;
     road.position.y = 0.0009;
     road.rotation.x = - Math.PI / 2;
+    //console.log(road.position.z);
 
     scene.add(road);
     roads.push(road);
@@ -166,7 +162,7 @@ function setupWorld() {
 
   var pavementsL = [];
   for (var z = -147.8; z <= 187.8; z += 60) { // Start from -240 and sequentially add one every 30 pixels
-    for (var x = -180; x <= 170; x += 50) {
+    for (var x = -130; x <= 120; x += 50) {
     var pavementL = new THREE.Mesh( new THREE.PlaneBufferGeometry( 46.3, 0.66 ),
       new THREE.MeshPhongMaterial ( { color: 0x666666,
         depthWrite: true, shininess: 15, side: THREE.DoubleSide } ) );
@@ -184,7 +180,7 @@ function setupWorld() {
 
   var pavementsR = [];
   for (var z = -152.2; z <= 192.2; z += 60) { // Start from -240 and sequentially add one every 30 pixels
-    for (var x = -180; x <= 170; x += 50) {
+    for (var x = -130; x <= 120; x += 50) {
     var pavementR = new THREE.Mesh( new THREE.PlaneBufferGeometry( 46.3, 0.66 ),
     new THREE.MeshPhongMaterial ( { color: 0x666666,
       depthWrite: true, shininess: 15, side: THREE.DoubleSide } ) );
@@ -202,7 +198,7 @@ function setupWorld() {
 
 var roades = [];
 for (var x = -105; x <= 105; x += 50) {
-  var roada = new THREE.Mesh( new THREE.PlaneBufferGeometry( 400, 5 ),
+  roada = new THREE.Mesh( new THREE.PlaneBufferGeometry( 400, 5 ),
   new THREE.MeshPhongMaterial ( { color: 0x111111,
     depthWrite: true, shininess: 15, side: THREE.DoubleSide } ) );
 
@@ -212,6 +208,7 @@ for (var x = -105; x <= 105; x += 50) {
     roada.position.x = x;
     scene.add(roada);
     roades.push(roada);
+    //console.log(roada.position.x);
   }
 
   var pavements1 = [];
@@ -261,10 +258,14 @@ function models() {
     objLoader.load(
       'models/tinyhouse.obj',
       function (tinyhouseOBJ) {
+        var streetx = roadx[Math.floor(Math.random()*roadx.length)];
+        var streetz = roadz[Math.floor(Math.random()*roadz.length)];
         tinyhouseOBJ.scale.set(1.2,1.2,1.2);
         tinyhouseOBJ.position.y = 0;
-        tinyhouseOBJ.position.z = 25.7;
+        tinyhouseOBJ.position.z = streetz - 4.3;
+        tinyhouseOBJ.position.x = streetx - Math.floor((Math.random() * 41) + 4.3);//4.3; //51; (41 + 4.3);//
         tinyhouseOBJ.rotation.y = - Math.PI;
+        //console.log(roada.position.x);
         //console.log(tinyhouseOBJ.rotation.y);
         tinyhouseOBJ.traverse( function ( child ) {
           child.castShadow = true;
@@ -281,11 +282,13 @@ function models() {
     objLoader0.load(
       'models/smallhouse.obj',
       function (smallhouseOBJ) {
+        var streetx = roadx[Math.floor(Math.random()*roadx.length)];
+        var streetz = roadz[Math.floor(Math.random()*roadz.length)];
         smallhouseOBJ.scale.set(1.2,1.2,1.2);
         smallhouseOBJ.position.y = 0;
-        smallhouseOBJ.position.z = 25.7;
-        smallhouseOBJ.position.x = 5;
-        smallhouseOBJ.rotation.y = - Math.PI;
+        smallhouseOBJ.position.z = streetz - Math.floor((Math.random() * 51) + 4.3);
+        smallhouseOBJ.position.x = streetx - 4.3; //Math.floor((Math.random() * 41) - 4.3);
+        smallhouseOBJ.rotation.y = - Math.PI / 2;
         //console.log(smallhouseOBJ.rotation.y);
         smallhouseOBJ.traverse( function ( child ) {
           child.castShadow = true;
@@ -302,10 +305,13 @@ function models() {
     objLoader1.load(
       'models/mediumhouse.obj',
       function (mediumhouseOBJ) {
+        var streetx = roadx[Math.floor(Math.random()*roadx.length)];
+        var streetz = roadz[Math.floor(Math.random()*roadz.length)];
         mediumhouseOBJ.scale.set(1.2,1.2,1.2);
         mediumhouseOBJ.position.y = 0;
-        mediumhouseOBJ.position.z = 34.3;
-        //mediumhouseOBJ.rotation.y = - Math.PI;
+        mediumhouseOBJ.position.z = streetz - Math.floor((Math.random() * 51) - 6.3);
+        mediumhouseOBJ.position.x = streetx + 4.3; //Math.floor((Math.random() * 41) + 4.3);
+        mediumhouseOBJ.rotation.y = Math.PI / 2;
         //console.log(mediumhouseOBJ.rotation.y);
         mediumhouseOBJ.traverse( function ( child ) {
           child.castShadow = true;
@@ -323,10 +329,12 @@ function models() {
     objLoader2.load(
       'models/bighouse.obj',
       function (bighouseOBJ) {
+        var streetx = roadx[Math.floor(Math.random()*roadx.length)];
+        var streetz = roadz[Math.floor(Math.random()*roadz.length)];
         bighouseOBJ.scale.set(1.2,1.2,1.2);
         bighouseOBJ.position.y = 0;
-        bighouseOBJ.position.z = 34.3;
-        bighouseOBJ.position.x = 10;
+        bighouseOBJ.position.z = streetz + 4.3;
+        bighouseOBJ.position.x = streetx - Math.floor((Math.random() * 40) + 5.3);
         //bighouseOBJ.rotation.y = - Math.PI;
         //console.log(bighouseOBJ.rotation.y);
         bighouseOBJ.traverse( function ( child ) {
@@ -383,7 +391,21 @@ function models() {
 
 // DRAW =========================================================
 function draw() {
-  renderer.render( scene, camera );
+  var time = Date.now() * 0.00002;
+  var daytime = new Map();
+  //var hours = daytime.map(())
+  //for (var i = 0; i < 1; i++) {
+
+  var newMotion = scale(Math.sin(time * 1) * 15, -13, 2, -50, 55);
+
+    light.position.y = newMotion;
+    //console.log(newMotion);
+    renderer.render( scene, camera );
+  //}
+}
+
+const scale = (num, in_min, in_max, out_min, out_max) => {
+  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 // UPDATE =======================================================
