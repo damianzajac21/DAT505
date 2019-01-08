@@ -1,6 +1,12 @@
 if ( WEBGL.isWebGLAvailable() === false ) {
   document.body.appendChild( WEBGL.getWebGLErrorMessage() );
 }
+
+
+const scale = (num, in_min, in_max, out_min, out_max) => {
+  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 // GLOBALS ======================================================
 var camera, scene, renderer, controls, clock, road, roada;
 var INV_MAX_FPS = 1 / 100, frameDelta = 0;
@@ -8,6 +14,10 @@ var ninety = - Math.PI / 2;
 var oneEighty = - Math.PI;
 var twoSeventy = Math.PI / 2;
 var zero = Math.PI;
+var degrees = [ ninety, oneEighty, twoSeventy, zero];
+
+var time = Date.now() * 0.00002;
+var newMotion = scale(Math.sin(time * 1) * 15, -13, 2, -50, 55);
 
 var parameters = {
   distance: 400,
@@ -15,9 +25,6 @@ var parameters = {
   azimuth: -0.01,
 };
 
-const scale = (num, in_min, in_max, out_min, out_max) => {
-  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
 // SETUP ========================================================
 
 function setup() {
@@ -27,7 +34,6 @@ function setup() {
   requestAnimationFrame(function animate() {
     draw();
     update();
-
   frameDelta += clock.getDelta();
   while (frameDelta >= INV_MAX_FPS) {
     update(INV_MAX_FPS);
@@ -247,8 +253,6 @@ for (var x = -105; x <= 105; x += 50) {
 
 // DRAW =========================================================
 function draw() {
-  var time = Date.now() * 0.00002;
-  var newMotion = scale(Math.sin(time * 1) * 15, -13, 2, -50, 55);
 
     light.position.y = newMotion;
     //console.log(newMotion);

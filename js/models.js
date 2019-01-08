@@ -1,17 +1,83 @@
 var roadx = [ -105, -55, -5, 45, 95 ];
 var roadz = [ -150, -90, -30, 30, 90, 150 ];
-//var streetx = roadx[Math.floor(Math.random()*roadx.length)];
-//var streetz = roadz[Math.floor(Math.random()*roadz.length)];
-
-var ninety = - Math.PI / 2;
-var oneEighty = - Math.PI;
-var twoSeventy = Math.PI / 2;
-var zero = Math.PI;
-var degrees = [ ninety, oneEighty, twoSeventy, zero];
-var randomizer = degrees[Math.floor(Math.random()*degrees.length)];
-console.log("degree: " + randomizer);
 
 var materialLoader = new THREE.MTLLoader()
+var buildings = [ 'tinyhouse', 'smallhouse', 'mediumhouse', 'bighouse'];//, 'skyscraper1' ];
+/*for (var z = -150; z <= 170; z += 60) { // Start from -240 and sequentially add one every 30 pixels
+building = new THREE.Mesh( new THREE.PlaneBufferGeometry( 400, 5 ),
+new THREE.MeshPhongMaterial ( { color: 0x111111,
+depthWrite: true, shininess: 15, side: THREE.DoubleSide } ) );
+
+road.position.z = z;
+road.position.y = 0.0009;
+road.rotation.x = ninety;
+
+scene.add(road);
+roads.push(road);
+}*/
+requestAnimationFrame(function animate1() {
+  var firstPositions = {
+    posZ: - 4.3,
+    posX: - Math.floor((Math.random() * 41)),
+    rotY: - Math.PI,
+  };
+  var secondPositions = {
+    posZ: 4.3,
+    posX: - Math.floor((Math.random() * 41)),
+    rotY: Math.PI,
+  };
+  var thirdPositions = {
+    posZ: - Math.floor((Math.random() * 51)),
+    posX: - 4.3,
+    rotY: - Math.PI/2,
+  };
+  var fourthPositions = {
+    posZ: - Math.floor((Math.random() * 51)),
+    posX: 4.3,
+    rotY: Math.PI/2,
+  };
+  var positions = [ firstPositions, secondPositions, thirdPositions, fourthPositions ];
+
+  //var thatWay = ;// + 4.3);
+  //var thisWay = ;// + 4.3);
+  //var thenWay = ;// - 4.3);
+
+  var buildingRandomizer = buildings[Math.floor(Math.random()*buildings.length)];
+  //console.log(buildingRandomizer);
+  var randomizer = degrees[Math.floor(Math.random()*degrees.length)];
+  //console.log(randomPos);
+  var streetx = roadx[Math.floor(Math.random()*roadx.length)];
+  var streetz = roadz[Math.floor(Math.random()*roadz.length)];
+  var randomPos = positions[Math.floor(Math.random()*positions.length)];
+  console.log(randomPos.posX);
+    if (civPoints > 10) {
+  //console.log(randomPos.posZ);
+  var objLoader = new THREE.OBJLoader()
+  materialLoader.load('models/' + buildingRandomizer + '.mtl', function (buildingMAT) {
+    objLoader.setMaterials(buildingMAT)
+    objLoader.load(
+      'models/' + buildingRandomizer + '.obj',
+      function (buildingOBJ) {
+        buildingOBJ.scale.set(1.2,1.2,1.2);
+        //buildingOBJ.position.y = 0;
+        buildingOBJ.position.z = streetz - randomPos.posZ;
+        buildingOBJ.position.x = streetx + randomPos.posX;//4.3; //51; (41 + 4.3);//
+        buildingOBJ.rotation.y = randomPos.rotY;
+        buildingOBJ.traverse( function ( child ) {
+          child.castShadow = true;
+        });
+        scene.add(buildingOBJ);
+      }
+    )
+  })
+}
+requestAnimationFrame( animate1 );
+});
+
+function newBuilding () {
+
+}
+
 
 //tinyhouse
 var objLoader = new THREE.OBJLoader()
@@ -36,7 +102,7 @@ materialLoader.load('models/tinyhouse.mtl', function (tinyhouseMAT) {
 })
 
 //smallhouse
-var objLoader0 = new THREE.OBJLoader()
+/*var objLoader0 = new THREE.OBJLoader()
 materialLoader.load('models/smallhouse.mtl', function (smallhouseMAT) {
   objLoader0.setMaterials(smallhouseMAT)
   objLoader0.load(
