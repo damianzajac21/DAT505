@@ -1,5 +1,5 @@
-var ecoPoints = 1;
-var civPoints = 1;
+var ecoPoints = 5;
+var civPoints = 5;
 
 navigator.mediaDevices.getUserMedia({ audio: true })
 .then(function(stream) {
@@ -32,10 +32,15 @@ navigator.mediaDevices.getUserMedia({ audio: true })
       document.getElementById("civPoints").innerHTML = "CivPoints: " + civPoints;
     //console.log(Math.round(average));
     // colorPids(average);
-    if (Math.round(average) < 10) {
-      ecoPoints = ecoPoints + 1;
-    } else if (Math.round(average) > 10) {
-      civPoints = civPoints + 1;
+    if (Math.round(average) < 15 || ecoPoints < 5) {
+      ecoPoints = ecoPoints + 5;
+    } else if (Math.round(average) > 15) {
+      ecoPoints = ecoPoints - 5;
+    }
+    if (Math.round(average) > 15 || civPoints < 5) {
+      civPoints = civPoints + 5;
+    } else if (Math.round(average) < 15) {
+      civPoints = civPoints - 5;
     }
   }
   })
