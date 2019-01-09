@@ -16,6 +16,7 @@ var twoSeventy = Math.PI / 2;
 var zero = Math.PI;
 var degrees = [ ninety, oneEighty, twoSeventy, zero];
 
+
 var time = Date.now() * 0.00002;
 var newMotion = scale(Math.sin(time * 1) * 15, -13, 2, -50, 55);
 
@@ -120,8 +121,8 @@ function setupThreeJS() {
   controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
   controls.dampingFactor = 0.25;
   controls.screenSpacePanning = false;
-  controls.minDistance = 15;
-  controls.maxDistance = 75;
+  controls.minDistance = 25;
+  controls.maxDistance = 125;
   controls.maxPolarAngle = (Math.PI / 2) - 0.4;
 
   window.addEventListener( 'resize', onWindowResize, false );
