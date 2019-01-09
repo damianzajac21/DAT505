@@ -2,7 +2,7 @@ var roadx = [ -105, -55, -5, 45, 95 ];
 var roadz = [ -150, -90, -30, 30, 90, 150 ];
 
 var materialLoader = new THREE.MTLLoader()
-var buildings = [ 'tinyhouse', 'smallhouse', 'mediumhouse', 'bighouse', 'skyscraper2', 'skyscraper3', 'skyscraper4' ];
+var buildings = [ 'tinyhouse', 'smallhouse', 'mediumhouse', 'bighouse', 'skyscraper2', 'skyscraper3', 'skyscraper4', 'skyscraper5', 'restaurant' ];
 
 setInterval(newBuilding, 5000);
 
