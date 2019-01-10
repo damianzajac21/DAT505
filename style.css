@@ -2,11 +2,12 @@ body {
   margin: 0;
   overflow: hidden;
 }
+/*custom font*/
 @font-face {
   font-family: 'Chalkduster';
   src: url('Chalkduster.ttf');
 }
-
+/*placement of the points*/
 h1, h2 {
   font-family: 'Chalkduster';
   font-weight: lighter;
@@ -19,6 +20,7 @@ h1, h2 {
   color: rgb(0,200,100);
 }
 
+/*place the civpoints below ecopoints*/
 h2 {
 	top: 20px;
   color: rgb(200,100,0)
