@@ -150,6 +150,7 @@ function newScraper () {
   var positions = [ firstPositions, secondPositions, thirdPositions, fourthPositions ];
 
   var randomPos = positions[Math.floor(Math.random()*positions.length)];
+  var randomScraper = skyscrapers[Math.floor(Math.random()*skyscrapers.length)];
 
   var streetx = roadx[Math.floor(Math.random()*roadx.length)];
   var streetz = roadz[Math.floor(Math.random()*roadz.length)];
